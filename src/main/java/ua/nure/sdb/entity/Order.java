@@ -10,15 +10,41 @@ public class Order {
     private Time time;
     private int status;
 
-    public Order() {
-    }
+    public static class Builder {
+        private Order newOrder;
 
-    public Order(long id, int client, Date date, Time time, int status) {
-        this.id = id;
-        this.client = client;
-        this.date = date;
-        this.time = time;
-        this.status = status;
+        public Builder() {
+            newOrder = new Order();
+        }
+
+        public Builder withId(int id) {
+            newOrder.id = id;
+            return this;
+        }
+
+        public Builder withClient(int client) {
+            newOrder.client = client;
+            return this;
+        }
+
+        public Builder withTime(Time time) {
+            newOrder.time = time;
+            return this;
+        }
+
+        public Builder withDate(Date date) {
+            newOrder.date = date;
+            return this;
+        }
+
+        public Builder withStatus(int status) {
+            newOrder.status = status;
+            return this;
+        }
+
+        public Order build() {
+            return newOrder;
+        }
     }
 
     public long getId() {
