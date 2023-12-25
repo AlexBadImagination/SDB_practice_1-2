@@ -4,7 +4,7 @@ import java.sql.Time;
 import java.sql.Date;
 
 public class Order {
-    private long id;
+    private String id;
     private int client;
     private Date date;
     private Time time;
@@ -17,7 +17,7 @@ public class Order {
             newOrder = new Order();
         }
 
-        public Builder withId(int id) {
+        public Builder withId(String id) {
             newOrder.id = id;
             return this;
         }
@@ -47,11 +47,11 @@ public class Order {
         }
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

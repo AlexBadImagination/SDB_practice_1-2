@@ -7,7 +7,7 @@ import java.util.List;
 
 public class DishDAO implements DAO<Dish>, Observable{
     @Override
-    public List<Dish> get(long id) throws SQLException {
+    public List<Dish> get(String id) throws SQLException {
         return null;
     }
 
@@ -22,7 +22,12 @@ public class DishDAO implements DAO<Dish>, Observable{
     }
 
     @Override
-    public boolean delete(long Id) throws SQLException {
+    public boolean delete(String Id) throws SQLException {
+        return false;
+    }
+
+    @Override
+    public boolean addAll(List<Dish> t) throws SQLException {
         return false;
     }
 

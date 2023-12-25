@@ -13,11 +13,11 @@ import static ua.nure.sdb.dao.mysql.MySqlDAOFactory.getConnection;
 
 public class MySqlUserDAO extends UserDAO {
     @Override
-    public List<User> get(long id) throws SQLException {
+    public List<User> get(String id) throws SQLException {
         try (Connection con = getConnection(false)) {
             try (PreparedStatement st = con.prepareStatement(
                     "select * from `user` where id = ?")) {
-                st.setLong(1, id);
+                st.setString(1, id);
                 try (ResultSet rs = st.executeQuery()) {
                     List<User> users = new ArrayList<>();
                     while (rs.next()) {
@@ -34,7 +34,7 @@ public class MySqlUserDAO extends UserDAO {
 
     private User mapUser(ResultSet rs) throws SQLException{
         User user = new User();
-        user.setId(rs.getInt("id"));
+        user.setId(rs.getString("id"));
         user.setName(rs.getString("name"));
         user.setSurname(rs.getString("surname"));
         user.setLogin(rs.getString("login"));
@@ -72,7 +72,7 @@ public class MySqlUserDAO extends UserDAO {
                             "(id, name, surname, login, password, gender_id, preferences) " +
                             "values (?, ?, ?, ?, ?, ?, ?)")) {
                 int i = 0;
-                st.setLong(++i, user.getId());
+                st.setString(++i, user.getId());
                 st.setString(++i, user.getName());
                 st.setString(++i, user.getSurname());
                 st.setString(++i, user.getLogin());
@@ -92,13 +92,13 @@ public class MySqlUserDAO extends UserDAO {
     }
 
     @Override
-    public boolean delete(long userId) throws SQLException {
+    public boolean delete(String userId) throws SQLException {
         Connection con = null;
         try{
             con = getConnection(false);
             try (PreparedStatement st = con.prepareStatement(
                     "delete from `user` where id = ?")){
-                st.setLong(1, userId);
+                st.setString(1, userId);
                 st.executeUpdate();
                 con.commit();
             }

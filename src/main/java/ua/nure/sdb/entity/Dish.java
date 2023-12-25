@@ -3,7 +3,7 @@ package ua.nure.sdb.entity;
 import java.util.Locale;
 
 public class Dish {
-    private long id;
+    private String id;
     private String name;
     private float price;
     private int weight;
@@ -16,7 +16,7 @@ public class Dish {
         public Builder() {
             newDish = new Dish();
         }
-        public Builder withId(int id){
+        public Builder withId(String id){
             newDish.id = id;
             return this;
         }
@@ -52,11 +52,11 @@ public class Dish {
 
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

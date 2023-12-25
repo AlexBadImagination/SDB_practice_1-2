@@ -9,7 +9,7 @@ public class OrderDishesDAO implements DAO<OrderDishes>{
 
 
     @Override
-    public List<OrderDishes> get(long id) throws SQLException {
+    public List<OrderDishes> get(String id) throws SQLException {
         return null;
     }
 
@@ -24,7 +24,12 @@ public class OrderDishesDAO implements DAO<OrderDishes>{
     }
 
     @Override
-    public boolean delete(long Id) throws SQLException {
+    public boolean delete(String Id) throws SQLException {
+        return false;
+    }
+
+    @Override
+    public boolean addAll(List<OrderDishes> t) throws SQLException {
         return false;
     }
 }

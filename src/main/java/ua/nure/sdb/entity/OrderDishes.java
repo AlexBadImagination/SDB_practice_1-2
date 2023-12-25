@@ -4,8 +4,8 @@ import java.sql.Date;
 import java.sql.Time;
 
 public class OrderDishes {
-    private int order;
-    private int dish;
+    private String order;
+    private String dish;
     private int amount;
     private int priority;
 
@@ -16,12 +16,12 @@ public class OrderDishes {
             newOrderDishes = new OrderDishes();
         }
 
-        public Builder withOrder(int order) {
+        public Builder withOrder(String order) {
             newOrderDishes.order = order;
             return this;
         }
 
-        public Builder withDish(int dish) {
+        public Builder withDish(String dish) {
             newOrderDishes.dish = dish;
             return this;
         }
@@ -41,19 +41,19 @@ public class OrderDishes {
         }
     }
 
-    public int getOrder() {
+    public String getOrder() {
         return order;
     }
 
-    public void setOrder(int order) {
+    public void setOrder(String order) {
         this.order = order;
     }
 
-    public int getDish() {
+    public String getDish() {
         return dish;
     }
 
-    public void setDish(int dish) {
+    public void setDish(String dish) {
         this.dish = dish;
     }
 

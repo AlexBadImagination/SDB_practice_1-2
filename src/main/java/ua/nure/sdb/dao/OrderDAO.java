@@ -7,7 +7,7 @@ import java.util.List;
 
 public class OrderDAO implements DAO<Order>{
     @Override
-    public List<Order> get(long id) throws SQLException {
+    public List<Order> get(String id) throws SQLException {
         return null;
     }
 
@@ -22,7 +22,12 @@ public class OrderDAO implements DAO<Order>{
     }
 
     @Override
-    public boolean delete(long Id) throws SQLException {
+    public boolean delete(String Id) throws SQLException {
+        return false;
+    }
+
+    @Override
+    public boolean addAll(List<Order> t) throws SQLException {
         return false;
     }
 

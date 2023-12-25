@@ -13,11 +13,11 @@ import static ua.nure.sdb.dao.mysql.MySqlDAOFactory.getConnection;
 
 public class MySqlOrderDAO extends OrderDAO {
     @Override
-    public List<Order> get(long id) throws SQLException {
+    public List<Order> get(String id) throws SQLException {
         try (Connection con = getConnection(false)) {
             try (PreparedStatement st = con.prepareStatement(
                     "select * from `order` where id = ?")) {
-                st.setLong(1, id);
+                st.setString(1, id);
                 try (ResultSet rs = st.executeQuery()) {
                     List<Order> orders = new ArrayList<>();
                     while (rs.next()) {
@@ -34,7 +34,7 @@ public class MySqlOrderDAO extends OrderDAO {
 
     private Order mapOrder(ResultSet rs) throws SQLException{
         Order order = new Order();
-        order.setId(rs.getInt("id"));
+        order.setId(rs.getString("id"));
         order.setClient(rs.getInt("client"));
         order.setDate(rs.getDate("date"));
         order.setTime(rs.getTime("time"));
@@ -70,7 +70,7 @@ public class MySqlOrderDAO extends OrderDAO {
                             "(id, client, date, time, status) " +
                             "values (?, ?, ?, ?, ?)")) {
                 int i = 0;
-                st.setLong(++i, order.getId());
+                st.setString(++i, order.getId());
                 st.setInt(++i, order.getClient());
                 st.setDate(++i, order.getDate());
                 st.setTime(++i, order.getTime());
@@ -88,13 +88,13 @@ public class MySqlOrderDAO extends OrderDAO {
     }
 
     @Override
-    public boolean delete(long orderId) throws SQLException {
+    public boolean delete(String orderId) throws SQLException {
         Connection con = null;
         try{
             con = getConnection(false);
             try (PreparedStatement st = con.prepareStatement(
                     "delete from `order` where id = ?")){
-                st.setLong(1, orderId);
+                st.setString(1, orderId);
                 st.executeUpdate();
                 con.commit();
             }

@@ -18,11 +18,11 @@ public class MySqlDishDAO extends DishDAO{
         observers = new LinkedList<>();
     }
     @Override
-    public List<Dish> get(long id) throws SQLException {
+    public List<Dish> get(String id) throws SQLException {
         try (Connection con = getConnection(false)) {
             try (PreparedStatement st = con.prepareStatement(
                     "select * from dish where id = ?")) {
-                st.setLong(1, id);
+                st.setString(1, id);
                 try (ResultSet rs = st.executeQuery()) {
                     List<Dish> dishes = new ArrayList<>();
                     while (rs.next()) {
@@ -39,7 +39,7 @@ public class MySqlDishDAO extends DishDAO{
 
     private Dish mapDish(ResultSet rs) throws SQLException{
         Dish dish = new Dish();
-        dish.setId(rs.getInt("id"));
+        dish.setId(rs.getString("id"));
         dish.setName(rs.getString("name"));
         dish.setPrice(rs.getFloat("price"));
         dish.setWeight(rs.getInt("weight"));
@@ -76,7 +76,7 @@ public class MySqlDishDAO extends DishDAO{
                             "(id, name, price, weight, description, category) " +
                             "values (?, ?, ?, ?, ?, ?)")) {
                 int i = 0;
-                st.setLong(++i, dish.getId());
+                st.setString(++i, dish.getId());
                 st.setString(++i, dish.getName());
                 st.setFloat(++i, dish.getPrice());
                 st.setInt(++i, dish.getWeight());
@@ -96,14 +96,14 @@ public class MySqlDishDAO extends DishDAO{
     }
 
     @Override
-    public boolean delete(long dishId) throws SQLException {
+    public boolean delete(String dishId) throws SQLException {
         List<Dish> dishes = get(dishId);
         Connection con = null;
         try{
             con = getConnection(false);
             try (PreparedStatement st = con.prepareStatement(
                     "delete from dish where id = ?")){
-                st.setLong(1, dishId);
+                st.setString(1, dishId);
                 st.executeUpdate();
                 con.commit();
                 for (Dish dish: dishes) {

@@ -14,11 +14,11 @@ import static ua.nure.sdb.dao.mysql.MySqlDAOFactory.getConnection;
 public class MySQLOrderDishesDAO extends OrderDishesDAO {
 
     @Override
-    public List<OrderDishes> get(long id) throws SQLException {
+    public List<OrderDishes> get(String id) throws SQLException {
         try (Connection con = getConnection(false)) {
             try (PreparedStatement st = con.prepareStatement(
                     "select * from `order_dishes` where `order` = ?")) {
-                st.setLong(1, id);
+                st.setString(1, id);
                 try (ResultSet rs = st.executeQuery()) {
                     List<OrderDishes> orderDishes = new ArrayList<>();
                     while (rs.next()) {
@@ -35,8 +35,8 @@ public class MySQLOrderDishesDAO extends OrderDishesDAO {
 
     private OrderDishes mapOrderDishes(ResultSet rs) throws SQLException{
         OrderDishes orderDishes = new OrderDishes();
-        orderDishes.setOrder(rs.getInt("order"));
-        orderDishes.setDish(rs.getInt("dish"));
+        orderDishes.setOrder(rs.getString("order"));
+        orderDishes.setDish(rs.getString("dish"));
         orderDishes.setAmount(rs.getInt("amount"));
         orderDishes.setPriority(rs.getInt("priority"));
         return orderDishes;
@@ -70,8 +70,8 @@ public class MySQLOrderDishesDAO extends OrderDishesDAO {
                             "(`order`, dish, amount, priority) " +
                             "values (?, ?, ?, ?)")) {
                 int i = 0;
-                st.setInt(++i, orderDishes.getOrder());
-                st.setInt(++i, orderDishes.getDish());
+                st.setString(++i, orderDishes.getOrder());
+                st.setString(++i, orderDishes.getDish());
                 st.setInt(++i, orderDishes.getAmount());
                 st.setInt(++i, orderDishes.getPriority());
                 st.execute();
@@ -87,13 +87,13 @@ public class MySQLOrderDishesDAO extends OrderDishesDAO {
     }
 
     @Override
-    public boolean delete(long orderId) throws SQLException {
+    public boolean delete(String orderId) throws SQLException {
         Connection con = null;
         try{
             con = getConnection(false);
             try (PreparedStatement st = con.prepareStatement(
                     "delete from `order_dishes` where `order` = ?")){
-                st.setLong(1, orderId);
+                st.setString(1, orderId);
                 st.executeUpdate();
                 con.commit();
             }

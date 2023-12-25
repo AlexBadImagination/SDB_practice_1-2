@@ -11,7 +11,7 @@ import java.util.List;
 
 public class UserDAO implements DAO<User>{
     @Override
-    public List<User> get(long id) throws SQLException {
+    public List<User> get(String id) throws SQLException {
         return null;
     }
 
@@ -26,7 +26,12 @@ public class UserDAO implements DAO<User>{
     }
 
     @Override
-    public boolean delete(long Id) throws SQLException {
+    public boolean delete(String Id) throws SQLException {
+        return false;
+    }
+
+    @Override
+    public boolean addAll(List<User> t) throws SQLException {
         return false;
     }
 }
