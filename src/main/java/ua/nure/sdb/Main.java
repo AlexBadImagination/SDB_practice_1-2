@@ -1,6 +1,7 @@
 package ua.nure.sdb;
 
 import ua.nure.sdb.dao.*;
+import ua.nure.sdb.dao.mysql.Client;
 import ua.nure.sdb.entity.Dish;
 import ua.nure.sdb.entity.Order;
 import ua.nure.sdb.entity.OrderDishes;
@@ -22,6 +23,8 @@ public class Main {
         OrderDAO orderDAO = df.getOrderDAO();
         UserDAO userDAO = df.getUserDAO();
         OrderDishesDAO orderDishesDAO = df.getOrderDishesDAO();
+        Client client = new Client();
+        dishDAO.registerObserver(client);
 
         try {
             Dish dish = new Dish.Builder()

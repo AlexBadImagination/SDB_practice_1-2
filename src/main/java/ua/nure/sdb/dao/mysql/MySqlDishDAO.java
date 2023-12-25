@@ -2,15 +2,21 @@ package ua.nure.sdb.dao.mysql;
 
 import ua.nure.sdb.dao.DBException;
 import ua.nure.sdb.dao.DishDAO;
+import ua.nure.sdb.dao.Observer;
 import ua.nure.sdb.entity.Dish;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static ua.nure.sdb.dao.mysql.MySqlDAOFactory.getConnection;
 
-public class MySqlDishDAO extends DishDAO {
+public class MySqlDishDAO extends DishDAO{
+    private List<Observer<Dish>> observers;
+    public MySqlDishDAO(){
+        observers = new LinkedList<>();
+    }
     @Override
     public List<Dish> get(long id) throws SQLException {
         try (Connection con = getConnection(false)) {
@@ -78,6 +84,7 @@ public class MySqlDishDAO extends DishDAO {
                 st.setInt(++i, dish.getCategory());
                 st.execute();
                 con.commit();
+                notifyObservers("New dish added: " + dish.getName());
                 return true;
             }
         } catch (SQLException e) {
@@ -90,6 +97,7 @@ public class MySqlDishDAO extends DishDAO {
 
     @Override
     public boolean delete(long dishId) throws SQLException {
+        List<Dish> dishes = get(dishId);
         Connection con = null;
         try{
             con = getConnection(false);
@@ -98,6 +106,9 @@ public class MySqlDishDAO extends DishDAO {
                 st.setLong(1, dishId);
                 st.executeUpdate();
                 con.commit();
+                for (Dish dish: dishes) {
+                    notifyObservers("Dish deleted: " + dish.getName());
+                }
             }
             return true;
         } catch (SQLException e) {
@@ -105,6 +116,23 @@ public class MySqlDishDAO extends DishDAO {
             throw new DBException(e);
         } finally {
             MySqlDAOFactory.close(con);
+        }
+    }
+
+    @Override
+    public void registerObserver(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers(String message) {
+        for (Observer o : observers){
+            o.update(message);
         }
     }
 }
