@@ -1,13 +1,19 @@
-package ua.nure.sdb.dao;
+package ua.nure.sdb.proxy;
 
+import ua.nure.sdb.dao.UserDAO;
 import ua.nure.sdb.entity.User;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public class UserDAO implements DAO<User>{
+public class UserProxy implements IUserDAO{
+    private boolean isAdmin;
+    public UserProxy(int role_id){
+       this.isAdmin = role_id == 2;
+    }
     @Override
     public List<User> get(long id) throws SQLException {
+        
         return null;
     }
 
@@ -25,9 +31,4 @@ public class UserDAO implements DAO<User>{
     public boolean delete(long Id) throws SQLException {
         return false;
     }
-
-    public User getLoginPassword(String login, String password) throws SQLException {
-        return null;
-    }
-
 }

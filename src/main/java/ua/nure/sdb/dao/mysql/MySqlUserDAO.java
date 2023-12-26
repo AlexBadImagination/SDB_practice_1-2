@@ -2,7 +2,6 @@ package ua.nure.sdb.dao.mysql;
 
 import ua.nure.sdb.dao.DBException;
 import ua.nure.sdb.dao.UserDAO;
-import ua.nure.sdb.entity.Order;
 import ua.nure.sdb.entity.User;
 
 import java.sql.*;
@@ -32,7 +31,7 @@ public class MySqlUserDAO extends UserDAO {
         }
     }
 
-    private User mapUser(ResultSet rs) throws SQLException{
+    private User mapUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setId(rs.getInt("id"));
         user.setName(rs.getString("name"));
@@ -41,6 +40,7 @@ public class MySqlUserDAO extends UserDAO {
         user.setPassword(rs.getString("password"));
         user.setGender(rs.getInt("gender_id"));
         user.setPreferences(rs.getString("preferences"));
+        user.setRole(rs.getInt("fk_role_id"));
         return user;
     }
 
@@ -94,10 +94,10 @@ public class MySqlUserDAO extends UserDAO {
     @Override
     public boolean delete(long userId) throws SQLException {
         Connection con = null;
-        try{
+        try {
             con = getConnection(false);
             try (PreparedStatement st = con.prepareStatement(
-                    "delete from `user` where id = ?")){
+                    "delete from `user` where id = ?")) {
                 st.setLong(1, userId);
                 st.executeUpdate();
                 con.commit();
@@ -108,6 +108,25 @@ public class MySqlUserDAO extends UserDAO {
             throw new DBException(e);
         } finally {
             MySqlDAOFactory.close(con);
+        }
+    }
+
+    public User getLoginPassword(String login, String password) throws SQLException {
+        try (Connection con = getConnection(false)) {
+            try (PreparedStatement st = con.prepareStatement(
+                    "select * from `user` where login = ? and password = ?")) {
+                st.setString(1, login);
+                st.setString(2, password);
+                User user = null;
+                try (ResultSet rs = st.executeQuery()) {
+                    if (rs.next())
+                        user = mapUser(rs);
+                }
+                return user;
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+                throw new DBException(exception);
+            }
         }
     }
 }

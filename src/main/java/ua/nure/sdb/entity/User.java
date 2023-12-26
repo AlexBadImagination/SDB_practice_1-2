@@ -8,6 +8,7 @@ public class User {
     private String password;
     private int gender;
     private String preferences;
+    private int role;
 
     public static class Builder {
         private User newUser;
@@ -47,6 +48,11 @@ public class User {
 
         public Builder withPreferences(String preferences){
             newUser.preferences = preferences;
+            return this;
+        }
+
+        public Builder withRole(int role){
+            newUser.role = role;
             return this;
         }
 
@@ -123,5 +129,13 @@ public class User {
 
     public void setPreferences(String preferences) {
         this.preferences = preferences;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
     }
 }
