@@ -29,14 +29,15 @@ public class MainMongoDb {
             System.out.println();
             System.out.println(userDAO.getAll());
             System.out.println("End");
-            int[] amounts = new int[]{1, 10, 100, 1000, 10000, 50000, 100000, 500000};
-            for (int i: amounts){
-                long m = System.currentTimeMillis();
-                insertManyUsers(userDAO, i);
-                System.out.print("Added " + i + " documents in ");
-                System.out.print((double) (System.currentTimeMillis() - m));
-                System.out.print(" milliseconds");
-            }
+//            int[] amounts = new int[]{1, 10, 100, 1000, 10000, 50000, 100000, 500000};
+//            for (int i: amounts){
+//                long m = System.currentTimeMillis();
+//                insertManyUsers(userDAO, i);
+//                System.out.print("Added " + i + " documents in ");
+//                System.out.print((double) (System.currentTimeMillis() - m));
+//                System.out.print(" milliseconds");
+//            }
+            System.out.println(userDAO.delete("g"));
         }catch (SQLException e){
             System.out.println("There was an error");
         }

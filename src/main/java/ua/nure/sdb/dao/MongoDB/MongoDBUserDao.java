@@ -14,14 +14,13 @@ import java.util.Map;
 import com.mongodb.client.MongoClient;
 
 import static ua.nure.sdb.dao.MongoDB.MongoDBFactory.getMongoClient;
+import static ua.nure.sdb.dao.MongoDB.MongoDBFactory.getMongoDatabase;
 
 
 public class MongoDBUserDao extends UserDAO {
     @Override
     public List<User> get(String id) throws MongoException {
-        MongoClient mongoClient = getMongoClient();
-        MongoDatabase mongoDatabase = mongoClient.getDatabase("restaurant");
-        MongoCollection<Document> collection = mongoDatabase.getCollection("user");
+        MongoCollection<Document> collection = getMongoDatabase().getCollection("user");
         List<Document> documents = new ArrayList<>();
         documents.add(collection.find(Filters.eq("id", id)).first());
         return mapUser(documents);
@@ -29,6 +28,8 @@ public class MongoDBUserDao extends UserDAO {
     private List<User> mapUser(List<Document> documents) throws MongoException {
         List<User> users = new ArrayList<>();
         for (Document document: documents) {
+            if(document == null)
+                break;
             users.add(new User.Builder()
                     .withId(document.getString("id"))
                     .withName(document.getString("name"))
@@ -42,9 +43,7 @@ public class MongoDBUserDao extends UserDAO {
     }
     @Override
     public List<User> getAll() throws MongoException {
-        MongoClient mongoClient = getMongoClient();
-        MongoDatabase mongoDatabase = mongoClient.getDatabase("restaurant");
-        MongoCollection<Document> collection = mongoDatabase.getCollection("user");
+        MongoCollection<Document> collection = getMongoDatabase().getCollection("user");
         List<Document> documents = new ArrayList<>();
         MongoCursor<Document> cursor = collection.find().iterator();
         while (cursor.hasNext()){
@@ -56,18 +55,14 @@ public class MongoDBUserDao extends UserDAO {
 
     @Override
     public boolean add(User user) throws MongoException {
-        MongoClient mongoClient = getMongoClient();
-        MongoDatabase mongoDatabase = mongoClient.getDatabase("restaurant");
-        MongoCollection<Document> collection = mongoDatabase.getCollection("user");
+        MongoCollection<Document> collection = getMongoDatabase().getCollection("user");
         collection.insertOne(mapDocument(user));
         return true;
     }
 
     @Override
     public boolean addAll(List<User> users) throws MongoException {
-        MongoClient mongoClient = getMongoClient();
-        MongoDatabase mongoDatabase = mongoClient.getDatabase("restaurant");
-        MongoCollection<Document> collection = mongoDatabase.getCollection("user");
+        MongoCollection<Document> collection = getMongoDatabase().getCollection("user");
         List<Document> documents = new ArrayList<>();
         for(User user: users){
             documents.add(mapDocument(user));
@@ -89,6 +84,8 @@ public class MongoDBUserDao extends UserDAO {
 
     @Override
     public boolean delete(String id) throws MongoException {
-        return false;
+        MongoCollection<Document> collection = getMongoDatabase().getCollection("user");
+        collection.drop();
+        return true;
     }
 }

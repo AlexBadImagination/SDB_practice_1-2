@@ -1,12 +1,13 @@
 package ua.nure.sdb.dao;
 
+import ua.nure.sdb.dao.MongoDB.MongoDBFactory;
 import ua.nure.sdb.dao.mysql.MySqlDAOFactory;
 
 public abstract class DAOFactory {
-    public static DAOFactory getDAOFactory() {
-
-        // read configuration
-        return MySqlDAOFactory.getMySqlDAOFactory();
+    public static DAOFactory getDAOFactory(boolean MySQL) {
+        if(MySQL)
+            return MySqlDAOFactory.getMySqlDAOFactory();
+        return MongoDBFactory.getMongoDBFactory();
     }
 
     public abstract UserDAO getUserDAO();

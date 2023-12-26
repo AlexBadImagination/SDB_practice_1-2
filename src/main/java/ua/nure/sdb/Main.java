@@ -1,6 +1,7 @@
 package ua.nure.sdb;
 
 import ua.nure.sdb.dao.*;
+import ua.nure.sdb.dao.MongoDB.MongoDBFactory;
 import ua.nure.sdb.dao.mysql.Client;
 import ua.nure.sdb.entity.Dish;
 import ua.nure.sdb.entity.Order;
@@ -10,12 +11,50 @@ import ua.nure.sdb.entity.User;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Main {
     public static void main(String[] args){
-        DAOFactory df = DAOFactory.getDAOFactory();
-        DAOFactory newDf = DAOFactory.getDAOFactory();
+        //mySQLMain();
+        mongoDBMain();
+
+        /*DAOFactory mySQLDaoFactory = DAOFactory.getDAOFactory(true);
+        DAOFactory mongoDBFactory = DAOFactory.getDAOFactory(false);
+
+        UserDAO mysqlUserDAO = mySQLDaoFactory.getUserDAO();
+        UserDAO mongoUserDAO = mongoDBFactory.getUserDAO();
+        try{
+            transferToMySQL(mysqlUserDAO, mongoUserDAO);
+            transferToMySQL(mysqlUserDAO, mongoUserDAO);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }*/
+    }
+    public static boolean transferToMongoDB(UserDAO mysqlUserDAO, UserDAO mongoUserDAO) throws SQLException {
+        List<User> users = mysqlUserDAO.getAll();
+        System.out.println(users.toString());
+        for (int i = 0; i < users.size(); i++){
+            mongoUserDAO.add(users.get(i));
+        }
+        System.out.println(mysqlUserDAO.getAll());
+        return true;
+    }
+    public static boolean transferToMySQL(UserDAO mysqlUserDAO, UserDAO mongoUserDAO) throws SQLException {
+        List<User> users = mongoUserDAO.getAll();
+        System.out.println(users.toString());
+        for (int i = 0; i < users.size(); i++){
+            mysqlUserDAO.add(users.get(i));
+        }
+        System.out.println(mongoUserDAO.getAll());
+        return true;
+    }
+
+    public static void mySQLMain(){
+
+        DAOFactory df = DAOFactory.getDAOFactory(true);
+        DAOFactory newDf = DAOFactory.getDAOFactory(true);
         System.out.println("Are the dao factories same?");
         System.out.println(df == newDf);
         DishDAO dishDAO = df.getDishDAO();
@@ -27,6 +66,11 @@ public class Main {
         dishDAO.registerObserver(client);
 
         try {
+            System.out.println(dishDAO.delete("1"));
+            System.out.println(orderDAO.delete("1"));
+            System.out.println(orderDAO.delete("2"));
+            System.out.println(orderDAO.delete("3"));
+            System.out.println(userDAO.delete("1"));
             Dish dish = new Dish.Builder()
                     .withId("1")
                     .withName("Український суп")
@@ -111,15 +155,64 @@ public class Main {
             orderDAO.getReadyOrders().forEach((x) -> System.out.println("Order # " + x.getId() + ", date: " + x.getDate()));
 
             System.out.println();
-            System.out.println(dishDAO.delete("1"));
-            System.out.println(orderDAO.delete("1"));
-            System.out.println(orderDAO.delete("2"));
-            System.out.println(orderDAO.delete("3"));
-            System.out.println(userDAO.delete("1"));
-
+//            System.out.println(dishDAO.delete("1"));
+//            System.out.println(orderDAO.delete("1"));
+//            System.out.println(orderDAO.delete("2"));
+//            System.out.println(orderDAO.delete("3"));
+//            System.out.println(userDAO.delete("1"));
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
+    public static void mongoDBMain(){
+        DAOFactory mongoDBFactory = DAOFactory.getDAOFactory(false);
+        UserDAO userDAO = mongoDBFactory.getUserDAO();
+        try{
+//            System.out.println("User:");
+//            System.out.println(userDAO.get("1"));
+//            System.out.println();
+//            User user = new User.Builder()
+//                    .withId("1")
+//                    .withName("Petya")
+//                    .withSurname("Ershov")
+//                    .withLogin("petyaershov")
+//                    .withPassword("strongpassword15132")
+//                    .withGender(1)
+//                    .build();
+//            System.out.println(userDAO.add(user));
+//            System.out.println();
+//            System.out.println(userDAO.getAll());
+//            System.out.println("End");
+            int[] amounts = new int[]{1, 10, 100, 1000, 10000, 50000, 100000, 500000};
+            long m = System.currentTimeMillis();
+            //for (int i = 0; i < 100000; i++){
+                insertManyUsers(userDAO, 10000);
+                System.out.print("Added " + 10000 + " documents in ");
+                System.out.print((double) (System.currentTimeMillis() - m));
+                System.out.print(" milliseconds");
+            //}
+            System.out.println(userDAO.delete("g"));
+        }catch (SQLException e){
+            System.out.println("There was an error");
+        }
+    }
+
+    public static void insertManyUsers(UserDAO userDAO, int amount) throws SQLException {
+        List<User> users = new ArrayList<>();
+        User user = new User.Builder()
+                .withName("Petya")
+                .withSurname("Ershov")
+                .withLogin("petyaershov")
+                .withPassword("strongpassword15132")
+                .withGender(1)
+                .build();
+        for (int i = 0; i < amount; i++){
+            user.setId("" + i);
+            users.add(user);
+        }
+        userDAO.addAll(users);
+    }
+
 }

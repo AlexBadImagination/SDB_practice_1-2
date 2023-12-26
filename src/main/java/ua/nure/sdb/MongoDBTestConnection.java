@@ -41,5 +41,5 @@ public class MongoDBTestConnection {
         }
         return host + "?sslMode=DISABLED&serverTimzone=UTC&user=" + login + "&password=" + password;
     }*/
-    static final String URL = "mongodb://localhost:27017";
+    static final String URL = "mongodb://localhost:27001,localhost:27002"; //localhost:27003
 }
