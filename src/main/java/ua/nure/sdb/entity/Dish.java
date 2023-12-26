@@ -1,7 +1,5 @@
 package ua.nure.sdb.entity;
 
-import java.util.Locale;
-
 public class Dish {
     private long id;
     private String name;
@@ -16,7 +14,7 @@ public class Dish {
         public Builder() {
             newDish = new Dish();
         }
-        public Builder withId(int id){
+        public Builder withId(long id){
             newDish.id = id;
             return this;
         }
