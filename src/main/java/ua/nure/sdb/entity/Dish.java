@@ -8,46 +8,57 @@ public class Dish {
     private String description;
     private int category;
 
-    public static class Builder {
-        private Dish newDish;
+    public Dish() {}
+    public Dish(long id, String name, float price, int weight, String description, int category) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.weight = weight;
+        this.description = description;
+        this.category = category;
+    }
 
-        public Builder() {
-            newDish = new Dish();
-        }
+    public static class Builder {
+        private long id;
+        private String name;
+        private float price;
+        private int weight;
+        private String description;
+        private int category;
+
         public Builder withId(long id){
-            newDish.id = id;
+            this.id = id;
             return this;
         }
 
         public Builder withName(String name){
-            newDish.name = name;
+            this.name = name;
             return this;
         }
 
         public Builder withWeight(int weight){
-            newDish.weight = weight;
+            this.weight = weight;
             return this;
         }
 
         public Builder withPrice(float price){
-            newDish.price = price;
+            this.price = price;
             return this;
         }
 
         public Builder withDescription(String description){
-            newDish.description = description;
+            this.description = description;
             return this;
         }
 
         public Builder withCategory(int category){
-            newDish.category = category;
+            this.category = category;
             return this;
         }
 
         public Dish build(){
-            return newDish;
+            return(new Dish(id, name, price, weight, description, category));
         }
-
     }
 
     public long getId() {
